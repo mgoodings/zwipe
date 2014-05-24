@@ -1,0 +1,30 @@
+{
+  "name": "Zwipe",
+  "description": "Zwipe Homescreen",
+  "launch_path": "/index.html",
+  "type": "certified",
+  "role": "homescreen",
+  "developer": {
+    "name": "Miles Goodings",
+    "url": "https://github.com/mgoodings/"
+  },
+  "permissions": {
+    "webapps-manage": {},
+    "systemXHR": {},
+    "settings": { "access": "readwrite" },
+    "open-remote-window": {},
+    "storage": {},
+    "alarms": {},
+    "power": {}
+  },
+  "locales": {
+    "en-US": {
+      "name": "Zwipe",
+      "description": "Zwipe Homescreen"
+    }
+  },
+  "default_locale": "en-US",
+  "orientation": "portrait-primary",
+  "activities": {},
+  "messages": []
+}
