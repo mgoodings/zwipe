@@ -6,7 +6,6 @@
   <meta name='viewport' content='width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0' />
   <meta http-equiv="pragma" content="no-cache" />
   <title>Zwipe</title>
-  <link rel="stylesheet" href="css/animate.css" />
   <link rel="stylesheet" href="css/angular-csp.css" />
   <link rel="stylesheet" href="css/app.css" />
 
@@ -16,7 +15,13 @@
   <script src="js/app.js"></script>
 </head>
 <body ng-controller="ZwipeCtrl">
-  <div id="container" ng-swipe-left="move(-1)" ng-swipe-right="move(1)">
+  <div class="container" ng-click="apps[selected].launch()">
+    <h1>{{apps[selected].name}}</h1>
+    <h2>{{apps[selected].desc}}</h2>
+    <img src="{{apps[selected].iconUrl}}" />
+  </div>
+
+  <div id="scroller" ng-swipe-left="move(-1)" ng-swipe-right="move(1)">
   </div>
 </body>
 </html>
