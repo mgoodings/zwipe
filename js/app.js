@@ -43,9 +43,15 @@
   };
 
   ng.module('zwipe', ['ngTouch'])
+    .config(['$compileProvider',
+      function($compileProvider) {
+        $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|app):/);
+        $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|app):/);
+      }
+    ])
     .factory('AppService', function($q) {
       var svc = {},
-        hiddenRoles = ['system', 'input', 'search', 'homescreen'];
+        hiddenRoles = ['system', 'homescreen', 'input', 'search'];
 
       function filterApplications(applications) {
         var results = [];
@@ -95,18 +101,42 @@
       return svc;
     })
     .controller('ZwipeCtrl', function($scope, AppService) {
+      $scope.offset = 0;
+      $scope.move = function(value) {
+        $scope.offset += value;
+        calculateAppPositions();
+      };
+
+      var stage = Sprite3D.stage(document.querySelector("#container"));
+
+      function calculateAppPositions() {
+        var radius = 150;
+
+        for (var i = 0, length = $scope.apps.length; i < length; i++) {
+          var app = $scope.apps[i],
+            theta = (360 / length),
+            angle = (((i + $scope.offset) % length) * theta),
+            radAngle = (angle / 180) * Math.PI,
+            positionX = Math.sin(radAngle) * radius,
+            positionY = -Math.cos(radAngle) * radius;
+
+          app.sprite
+            .origin(positionX + 30, positionY + 30)
+            .rotationX(angle / 2)
+            .rotationY(angle)
+            .update();
+        }
+      }
+
       AppService.getApplications().then(function(apps) {
         apps.forEach(function(app) {
-          console.log(app.iconUrl);
+          app.sprite = Sprite3D.create('.app-icon');
+          app.sprite.style['background'] = 'url(' + app.iconUrl + ')';
+          stage.appendChild(app.sprite);
         });
+
         $scope.apps = apps;
+        calculateAppPositions();
       });
-    })
-    .config(['$compileProvider',
-      function($compileProvider) {
-        console.log('boop');
-        $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|app):/);
-        $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|app):/);
-      }
-    ]);
+    });
 }(angular, navigator.mozApps));

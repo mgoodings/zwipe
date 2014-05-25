@@ -1,23 +1,22 @@
 <!DOCTYPE html>
-<html ng-app="zwipe" ng-csp>
+<html lang="en" ng-app="zwipe" ng-csp>
 <head>
   <meta charset="utf-8" />
+  <meta name='HandheldFriendly' content='True' />
+  <meta name='viewport' content='width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0' />
   <meta http-equiv="pragma" content="no-cache" />
   <title>Zwipe</title>
   <link rel="stylesheet" href="css/animate.css" />
   <link rel="stylesheet" href="css/angular-csp.css" />
   <link rel="stylesheet" href="css/app.css" />
+
+  <script src="js/Sprite3D.js"></script>
   <script src="js/angular.js"></script>
   <script src="js/angular-touch.js"></script>
   <script src="js/app.js"></script>
 </head>
 <body ng-controller="ZwipeCtrl">
-  <div class="container">
-    <ul class="apps">
-      <li ng-repeat="app in apps">
-        <img src="{{app.iconUrl}}" /> {{app.name}} - {{app.role}}
-      </li>
-    </ul>
+  <div id="container" ng-swipe-left="move(-1)" ng-swipe-right="move(1)">
   </div>
 </body>
 </html>
