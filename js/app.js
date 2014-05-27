@@ -101,41 +101,11 @@
       return svc;
     })
     .controller('ZwipeCtrl', function($scope, $swipe, AppService) {
-      var stage = Sprite3D.stage(document.querySelector("#scroller")),
-        startX;
-
-      $scope.bearing = 0;
-      $scope.selected = 0;
-
-      $swipe.bind(ng.element(stage), {
-        'start': function(coords) {
-          startX = coords.x;
-        },
-        'move': function(coords) {
-          var delta = (coords.x - startX) / 16;
-
-          $scope.bearing += delta;
-          $scope.bearing = normalize($scope.bearing);
-
-          calculateAppPositions();
-        },
-        'end': function(coords) {
-          var length = $scope.apps.length,
-            theta = (360 / length);
-
-          $scope.selected = (Math.round($scope.bearing / theta) % length);
-          $scope.bearing = $scope.selected * theta;
-
-          calculateAppPositions();
-        },
-        'cancel': function(coords) {}
-      });
-
       function calculateMovement(r, a, t) {
         return {
           x: Math.sin(r + a),
           y: (Math.sin(r + 3 * Math.PI / 2 + a) / 8) * t,
-          z: -(Math.cos(r + a) + 1) / 2,
+          z: (Math.cos(r + a) + 1) / 2,
           scale: (Math.sin(r + Math.PI / 2 + a) / 2) + 0.5
         };
       }
@@ -145,48 +115,82 @@
         return (inRange < 0) ? 360 + inRange : inRange;
       }
 
-      function calculateAppPositions() {
-        var radius = 150;
+      var stage = document.querySelector('#spinner'), startX;
 
-        for (var i = 0, length = $scope.apps.length; i < length; i++) {
-          var app = $scope.apps[i];
-          var element = ng.element(app.sprite);
-          var bearing = i * (360 / length);
-          var angle = normalize((360 - bearing) + $scope.bearing);
-          var rad = (angle * Math.PI) / 180;
+      $scope.acceleration = 0;
+      $scope.bearing = 0;
+      $scope.selected = 0;
 
-          while (rad < 0) {
-            rad += (Math.PI * 2);
-          }
+      $scope.appStyle = function(index, length) {
+        var radiusX = 180, radiusY = 200, radiusZ = -100;
+        var bearing = index * (360 / length);
+        var originX = 0,
+            originY = 0,
+            originZ = 0,
+            rotationX = 0,
+            rotationY = 0,
+            rotationZ = 0,
+            scaleX = 1,
+            scaleY = 1,
+            scaleZ = 1;
 
-          while (rad > (Math.PI * 2)) {
-            rad -= (Math.PI * 2);
-          }
+        var angle = normalize((360 - bearing) + $scope.bearing);
+        var rad = (angle * Math.PI) / 180;
 
-          var movement = calculateMovement(rad, 0, 0);
-
-          app.sprite
-            .origin((movement.x * radius) + 30, (movement.z * radius) + 30, movement.y * radius)
-            .scale(movement.scale)
-            .update();
-
-          if (i === $scope.selected) {
-            element.addClass('selected');
-          } else {
-            element.removeClass('selected');
-          }
+        while (rad < 0) {
+          rad += (Math.PI * 2);
         }
-      }
+
+        while (rad > (Math.PI * 2)) {
+          rad -= (Math.PI * 2);
+        }
+
+        var movement = calculateMovement(rad, 0, 0);
+
+        originX = (movement.x * radiusX) - 30;
+        originY = (movement.z * radiusY) - 30;
+        originZ = radiusZ;
+        scaleX = scaleY = scaleZ = movement.scale;
+
+        var transform = [
+          'translate3d(', originX, 'px,', originY, 'px,', originZ, 'px) ',
+          'rotateX(', rotationX, 'deg) ',
+          'rotateY(', rotationY, 'deg) ',
+          'rotateZ(', rotationZ, 'deg) ',
+          'scale3d(', scaleX, ',', scaleY, ',', scaleZ, ')'
+        ];
+
+        return {
+          'transform': transform.join('')
+        };
+      };
+
+      $swipe.bind(ng.element(stage), {
+        'start': function(coords) {
+          startX = coords.x;
+        },
+        'move': function(coords) {
+          var delta = (coords.x - startX) / 16;
+
+          $scope.$apply(function() {
+            $scope.bearing += delta;
+            $scope.bearing = normalize($scope.bearing);
+          });
+        },
+        'end': function(coords) {
+          var length = $scope.apps.length,
+            theta = (360 / length);
+
+          $scope.$apply(function() {
+            $scope.selected = (Math.round($scope.bearing / theta) % length);
+            $scope.bearing = $scope.selected * theta;
+          });
+        },
+        'cancel': function(coords) {}
+      });
 
       AppService.getApplications().then(function(apps) {
-        apps.forEach(function(app) {
-          app.sprite = Sprite3D.create('.app-icon');
-          app.sprite.style['background'] = 'url(' + app.iconUrl + ')';
-          stage.appendChild(app.sprite);
-        });
-
         $scope.apps = apps;
-        calculateAppPositions();
       });
     });
 }(angular, navigator.mozApps));

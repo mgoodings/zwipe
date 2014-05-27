@@ -9,7 +9,6 @@
   <link rel="stylesheet" href="css/angular-csp.css" />
   <link rel="stylesheet" href="css/app.css" />
 
-  <script src="js/Sprite3D.js"></script>
   <script src="js/angular.js"></script>
   <script src="js/angular-touch.js"></script>
   <script src="js/app.js"></script>
@@ -21,7 +20,10 @@
     <img src="{{apps[selected].iconUrl}}" />
   </div>
 
-  <div id="scroller" ng-swipe-left="move(-1)" ng-swipe-right="move(1)">
+  <div id="spinner" class="angular-coverflow">
+    <div class="angular-coverflow-item app-icon" ng-style="appStyle($index, apps.length)" ng-repeat="app in apps">
+      <img src="{{app.iconUrl}}" />
+    </div>
   </div>
 </body>
 </html>
