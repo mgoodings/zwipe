@@ -1,10 +1,14 @@
+# Zwipe
+
 ![Homescreen Demo](http://i.imgur.com/FDgcl8y.png)
 
-# TODO
+## Introduction
 
-* Convert coverflow code to a directive
+> Zwipe is a simple Firefox OS homescreen built with AngularJS.
 
-# License
+Currently Zwipe is more of a technical demo, however there is plans to continue development on it. It uses CSS transforms to achieve a 3D coverflow effect.
+
+## License
 
 Copyright (c) 2014 Miles Goodings (miles.goodings@gmail.com)
 
