@@ -1,3 +1,9 @@
+![Homescreen Demo](http://i.imgur.com/FDgcl8y.png)
+
+# TODO
+
+* Convert coverflow code to a directive
+
 # License
 
 Copyright (c) 2014 Miles Goodings (miles.goodings@gmail.com)
