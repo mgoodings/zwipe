@@ -3,7 +3,6 @@
     this.app = mozApp;
     this.entryPoint = entryPoint;
   }
-
   DashApplication.prototype = {
     get manifest() {
       return this.app.manifest ? this.app.manifest : this.app.updateManifest;
@@ -49,7 +48,7 @@
         $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|app):/);
       }
     ])
-    .factory('AppService', function($q) {
+    .factory('AppService', ['$q', function($q) {
       var svc = {},
         hiddenRoles = ['system', 'homescreen', 'input', 'search'];
 
@@ -76,6 +75,7 @@
       }
 
       svc.getApplications = function() {
+        alert(mozApps.mgmt);
         var deferred = $q.defer(),
           getAll = mozApps.mgmt.getAll();
 
@@ -99,8 +99,8 @@
       };
 
       return svc;
-    })
-    .controller('ZwipeCtrl', function($scope, $swipe, AppService) {
+    }])
+    .controller('ZwipeCtrl', ['$scope', '$swipe', 'AppService', function($scope, $swipe, AppService) {
       function calculateMovement(r, a, t) {
         return {
           x: Math.sin(r + a),
@@ -192,5 +192,5 @@
       AppService.getApplications().then(function(apps) {
         $scope.apps = apps;
       });
-    });
+    }]);
 }(angular, navigator.mozApps));
