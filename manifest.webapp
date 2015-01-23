@@ -5,6 +5,10 @@
   "type": "certified",
   "role": "homescreen",
   "fullscreen": "true",
+  "icons": {
+    "128": "/icons/zwipe-128.png",
+    "512": "/icons/zwipe-512.png"
+  },
   "developer": {
     "name": "Miles Goodings",
     "url": "https://github.com/mgoodings/"

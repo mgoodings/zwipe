@@ -221,8 +221,5 @@
         $scope.apps = apps;
       });
       $scope.date = DateFactory.getDate();
-      setTimeout(function(){
-        $scope.date = DateFactory.getDate();
-      }, 30000);
     }]);
 }(angular, navigator.mozApps));
