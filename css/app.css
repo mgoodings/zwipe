@@ -4,8 +4,8 @@ html, body
 }
 body
 {
-  background-image: url("/firefox-wallpaper-firefox-404961_1280_9602.jpg");
-  color: #fff;
+  background-color: #000000;
+  color: #FFFFFF;
   margin: 0px;
   padding: 0px;
   overflow: hidden;
@@ -16,7 +16,7 @@ body
   padding: 10px;
   width: 60px;
   height: 60px;
-  transition: 0.3s;
+  transition: 0.1s;
 }
 .app-icon.selected
 {
@@ -31,7 +31,7 @@ body
 }
 .container h1
 {
-  font-size: 36px;
+  font-size: 20px;
   margin-bottom: 10px;
 }
 .container h2
@@ -43,6 +43,26 @@ body
 {
   width: 80px;
   height: 80px;
+}
+
+.date {
+  padding-right: 20px;
+  float: right;
+}
+.date h1
+{
+  color: #FFC600;
+  text-align: center;
+  font-size: 30px;
+  margin-top: 20px;
+  margin-left: 5px;
+}
+
+.date h3
+{
+  color: #DAA600;
+  font-size: 20px;
+  margin-top: 5px;
 }
 .angular-coverflow {
   position: absolute;

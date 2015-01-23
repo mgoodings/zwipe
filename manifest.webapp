@@ -4,6 +4,7 @@
   "launch_path": "/index.html",
   "type": "certified",
   "role": "homescreen",
+  "fullscreen": "true",
   "developer": {
     "name": "Miles Goodings",
     "url": "https://github.com/mgoodings/"

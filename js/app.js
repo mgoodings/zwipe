@@ -56,6 +56,30 @@
         $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|app):/);
       }
     ])
+    .factory('DateFactory', ['$q', function($q) {
+      var now = new Date();
+
+      monthTitle = function(month) {
+        var text = ['January', 'February', 'March', 'April', 'May', 'June',
+          'July', 'Augunst', 'September', 'October', 'November', 'December'];
+          return text[month];
+      };
+
+        var factory = {
+          date: {
+            hour: now.getHours(),
+            minute: now.getMinutes(),
+            day: now.getDay(),
+            month: monthTitle(now.getMonth()),
+            year: now.getFullYear()
+          }
+        };
+
+        factory.getDate = function(){
+          return factory.date;
+        };
+        return factory;
+    }])
     .factory('AppService', ['$q', function($q) {
       var svc = {},
         hiddenRoles = ['theme', 'system', 'homescreen', 'input', 'search'];
@@ -88,14 +112,12 @@
 
         getAll.onsuccess = function(event) {
           console.log('getApplications:onsuccess', event);
-          console.log(event.target.result[2].manifest.icons);
           var apps = filterApplications(event.target.result);
           deferred.resolve(apps);
         };
 
         getAll.onerror = function(err) {
           console.log('getApplications:err', err);
-
           deferred.reject(err);
         };
 
@@ -104,7 +126,8 @@
 
       return svc;
     }])
-    .controller('ZwipeCtrl', ['$scope', '$swipe', 'AppService', function($scope, $swipe, AppService) {
+    .controller('ZwipeCtrl', ['$scope', '$swipe', 'AppService', 'DateFactory', function($scope, $swipe, AppService, DateFactory) {
+
       function calculateMovement(r, a, t) {
         return {
           x: Math.sin(r + a),
@@ -151,8 +174,8 @@
 
         var movement = calculateMovement(rad, 0, 0);
 
-        originX = (movement.x * radiusX) - 30;
-        originY = (movement.z * radiusY) - 30;
+        originX = (0.9 * movement.x * radiusX)- 30;
+        originY = (0.6 * movement.z * radiusY) + 20;
         originZ = radiusZ;
         scaleX = scaleY = scaleZ = movement.scale;
 
@@ -197,5 +220,9 @@
       AppService.getApplications().then(function(apps) {
         $scope.apps = apps;
       });
+      $scope.date = DateFactory.getDate();
+      setTimeout(function(){
+        $scope.date = DateFactory.getDate();
+      }, 30000);
     }]);
 }(angular, navigator.mozApps));

@@ -11,8 +11,13 @@
 
   <script src="js/angular.min.js"></script>
   <script src="js/angular-touch.min.js"></script>
+  <script src="js/app.js"></script>
 </head>
 <body ng-controller="ZwipeCtrl">
+  <div class="date">
+    <h1>{{date.hour}}:{{date.minute}}</h1>
+    <h3>{{date.day}} {{date.month}} {{date.year}}</h3>
+  </div>
   <div class="container" ng-click="apps[selected].launch()">
     <h1>{{apps[selected].name}}</h1>
     <img src="{{apps[selected].iconUrl}}" />
@@ -23,6 +28,5 @@
       <img src="{{app.iconUrl}}" style="width: 70px; height:70px"/>
     </div>
   </div>
-  <script src="js/app.js"></script>
 </body>
 </html>
