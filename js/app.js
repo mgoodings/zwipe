@@ -50,7 +50,7 @@
     ])
     .factory('AppService', ['$q', function($q) {
       var svc = {},
-        hiddenRoles = ['system', 'homescreen', 'input', 'search'];
+        hiddenRoles = ['theme', 'system', 'homescreen', 'input', 'search'];
 
       function filterApplications(applications) {
         var results = [];
@@ -75,17 +75,13 @@
       }
 
       svc.getApplications = function() {
-        alert(mozApps.mgmt);
         var deferred = $q.defer(),
           getAll = mozApps.mgmt.getAll();
 
-        console.log('getApplications');
-
         getAll.onsuccess = function(event) {
           console.log('getApplications:onsuccess', event);
-
+          console.log(event.target.result[9].manifest);
           var apps = filterApplications(event.target.result);
-
           deferred.resolve(apps);
         };
 
@@ -120,6 +116,7 @@
       $scope.acceleration = 0;
       $scope.bearing = 0;
       $scope.selected = 0;
+      $scope.plop = 0;
 
       $scope.appStyle = function(index, length) {
         var radiusX = 180, radiusY = 200, radiusZ = -100;
@@ -130,13 +127,12 @@
             rotationX = 0,
             rotationY = 0,
             rotationZ = 0,
-            scaleX = 1,
-            scaleY = 1,
+            scaleX = 1.0,
+            scaleY = 1.0,
             scaleZ = 1;
 
         var angle = normalize((360 - bearing) + $scope.bearing);
         var rad = (angle * Math.PI) / 180;
-
         while (rad < 0) {
           rad += (Math.PI * 2);
         }
@@ -160,6 +156,7 @@
           'scale3d(', scaleX, ',', scaleY, ',', scaleZ, ')'
         ];
 
+        $scope.plop += 1;
         return {
           'transform': transform.join('')
         };
@@ -170,7 +167,7 @@
           startX = coords.x;
         },
         'move': function(coords) {
-          var delta = (coords.x - startX) / 16;
+          var delta = (coords.x - startX) / 32;
 
           $scope.$apply(function() {
             $scope.bearing += delta;
