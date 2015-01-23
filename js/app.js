@@ -25,6 +25,14 @@
     },
 
     get icon() {
+      var i = 60;
+      while (i <= 512)
+      {
+        if (this.descriptor.icons[i])
+          return this.descriptor.icons[i];
+        i += 2; <!-- Icon have often an even size number -->
+      }
+      return null;
       return this.descriptor.icons ? this.descriptor.icons['60'] : null;
     },
 
@@ -80,7 +88,7 @@
 
         getAll.onsuccess = function(event) {
           console.log('getApplications:onsuccess', event);
-          console.log(event.target.result[9].manifest);
+          console.log(event.target.result[2].manifest.icons);
           var apps = filterApplications(event.target.result);
           deferred.resolve(apps);
         };
