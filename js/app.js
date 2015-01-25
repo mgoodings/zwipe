@@ -71,7 +71,6 @@
             year: now.getFullYear()
           }
         };
-        console.log(now.getDate());
 
         factory.getDate = function(){
           return factory.date;
@@ -126,12 +125,12 @@
     }])
     .controller('ZwipeCtrl', ['$scope', '$swipe', 'AppService', 'DateFactory', function($scope, $swipe, AppService, DateFactory) {
 
-      function calculateMovement(r, a, t) {
+      function calculateMovement(r) {
         return {
-          x: Math.sin(r + a),
-          y: (Math.sin(r + 3 * Math.PI / 2 + a) / 8) * t,
-          z: (Math.cos(r + a) + 1) / 2,
-          scale: (Math.sin(r + Math.PI / 2 + a) / 2) + 0.5
+          x: Math.sin(r),
+          y: (Math.sin(r + 3 * Math.PI / 2) / 8),
+          z: (Math.cos(r) + 1) / 2,
+          scale: (Math.sin(r + Math.PI / 2) / 2) + 0.5
         };
       }
 
@@ -170,7 +169,7 @@
           rad -= (Math.PI * 2);
         }
 
-        var movement = calculateMovement(rad, 0, 0);
+        var movement = calculateMovement(rad);
 
         originX = (0.9 * movement.x * radiusX)- 30;
         originY = (0.6 * movement.z * radiusY) + 20;
@@ -198,11 +197,10 @@
         'move': function(coords) {
           var delta = (coords.x - startX) / 32;
 
-          $scope.$apply(function() {
-            $scope.bearing += delta;
-            console.log($scope.bearing);
-            $scope.bearing = normalize($scope.bearing);
-          });
+          $scope.bearing += delta;
+          $scope.bearing %= 360;
+          if ($scope.bearing < 0)
+            $scope.bearing += 360
         },
         'end': function(coords) {
             var theta = (360 / $scope.apps.length);
