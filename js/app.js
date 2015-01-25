@@ -20,9 +20,6 @@
       return this.manifest.role;
     },
 
-    get desc() {
-      return this.manifest.description;
-    },
 
     get icon() {
       var i = 60;
@@ -33,7 +30,6 @@
         i += 2; <!-- Icon have often an even size number -->
       }
       return null;
-      return this.descriptor.icons ? this.descriptor.icons['60'] : null;
     },
 
     get iconUrl() {
@@ -56,6 +52,7 @@
         $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|app):/);
       }
     ])
+
     .factory('DateFactory', ['$q', function($q) {
       var now = new Date();
 
@@ -69,17 +66,19 @@
           date: {
             hour: now.getHours(),
             minute: now.getMinutes(),
-            day: now.getDay(),
+            day: now.getDate(),
             month: monthTitle(now.getMonth()),
             year: now.getFullYear()
           }
         };
+        console.log(now.getDate());
 
         factory.getDate = function(){
           return factory.date;
         };
         return factory;
     }])
+
     .factory('AppService', ['$q', function($q) {
       var svc = {},
         hiddenRoles = ['theme', 'system', 'homescreen', 'input', 'search'];
@@ -89,7 +88,6 @@
 
         applications.forEach(function(app) {
           var dashApp = new DashApplication(app);
-
           if (hiddenRoles.indexOf(dashApp.role) !== -1) {
             return;
           }
@@ -143,11 +141,11 @@
       }
 
       var stage = document.querySelector('#spinner'), startX;
+      <!-- stage is a variable containing the content of 'spinner', used by ngTouch -->
 
       $scope.acceleration = 0;
       $scope.bearing = 0;
       $scope.selected = 0;
-      $scope.plop = 0;
 
       $scope.appStyle = function(index, length) {
         var radiusX = 180, radiusY = 200, radiusZ = -100;
@@ -187,12 +185,12 @@
           'scale3d(', scaleX, ',', scaleY, ',', scaleZ, ')'
         ];
 
-        $scope.plop += 1;
         return {
           'transform': transform.join('')
         };
       };
 
+      <!-- We ask AngularJS to watch 'stage' for event and acts depending of what happening -->
       $swipe.bind(ng.element(stage), {
         'start': function(coords) {
           startX = coords.x;
@@ -202,19 +200,21 @@
 
           $scope.$apply(function() {
             $scope.bearing += delta;
+            console.log($scope.bearing);
             $scope.bearing = normalize($scope.bearing);
           });
         },
         'end': function(coords) {
-          var length = $scope.apps.length,
-            theta = (360 / length);
+            var theta = (360 / $scope.apps.length);
 
           $scope.$apply(function() {
-            $scope.selected = (Math.round($scope.bearing / theta) % length);
+            $scope.selected = (Math.round($scope.bearing / theta) % $scope.apps.length);
             $scope.bearing = $scope.selected * theta;
           });
         },
-        'cancel': function(coords) {}
+        'cancel': function(coords) {
+          <!-- We can use this event is user is scrolling down or up -->
+        }
       });
 
       AppService.getApplications().then(function(apps) {
